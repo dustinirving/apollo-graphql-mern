@@ -1,19 +1,20 @@
 import React, { useState } from 'react'
 import { gql, useMutation } from '@apollo/client'
+import { connect } from 'react-redux'
+import { creatPost, createPost } from '../actions/postActions'
 
 const CREATE_POST = gql`
-  mutation createPost($title: String!, $body: String!) {
+  mutation CreatePost($title: String!, $body: String!) {
     createPost(title: $title, body: $body) {
-      _id
       title
       body
     }
   }
 `
 
-const Form = () => {
+const Form = ({ createPost }) => {
   const [form, setForm] = useState({ title: '', body: '' })
-  const [createPost, { data }] = useMutation(CREATE_POST)
+  // const [createPost, { data }] = useMutation(CREATE_POST)
 
   const changeHandler = event => {
     const { name, value } = event.target
@@ -22,8 +23,10 @@ const Form = () => {
 
   const submitHandler = event => {
     event.preventDefault()
-    createPost({ variables: { title: form.title, body: form.body } })
+    createPost(form)
+    // createPost({ variables: { title: form.title, body: form.body } })
   }
+
   return (
     <form onSubmit={submitHandler}>
       <input onChange={changeHandler} name='title' placeholder='title' />
@@ -33,4 +36,10 @@ const Form = () => {
   )
 }
 
-export default Form
+const mapStateToProps = state => {
+  return {
+    posts: state.posts
+  }
+}
+
+export default connect(mapStateToProps, { createPost })(Form)
