@@ -18,7 +18,7 @@ const stateLink = withClientState({
   cache,
   resolvers: {
     Mutation: {
-      createPost: (_, { title, body }, { cache }) => {
+      createPost: async (_, { title, body }, { cache }) => {
         console.log(cache)
         const data = {
           post: {
@@ -29,7 +29,7 @@ const stateLink = withClientState({
         }
         console.log('hi')
         cache.writeData({ data })
-        return null
+        return data
       }
     }
   }

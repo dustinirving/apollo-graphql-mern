@@ -1,17 +1,18 @@
 import React, { useState } from 'react'
 import { gql, useMutation } from '@apollo/client'
 import { connect } from 'react-redux'
-import { creatPost, createPost } from '../actions/postActions'
+import { createPost } from '../actions/postActions'
 
-const CREATE_POST = gql`
-  mutation CreatePost($title: String!, $body: String!) {
-    createPost(title: $title, body: $body) {
-      title
-      body
-    }
-  }
-`
+// const CREATE_POST = gql`
+//   mutation createPost($title: String!, $body: String!) {
+//     createPost(title: $title, body: $body) @client {
+//       title
+//       body
+//     }
+//   }
+// `
 
+// { createPost }
 const Form = ({ createPost }) => {
   const [form, setForm] = useState({ title: '', body: '' })
   // const [createPost, { data }] = useMutation(CREATE_POST)

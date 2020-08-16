@@ -1,29 +1,15 @@
 import { GET_ITEMS, GET_ITEM, CREATE_ITEM, ITEMS_LOADING } from './types'
+import { getPostsQuery, createPostQuery } from '../queries'
+import axios from 'axios'
 
 export const getPosts = () => dispatch => {
   dispatch(setItemsLoading())
-  fetch('http://localhost:4000/', {
-    method: 'POST',
-    body: JSON.stringify({
-      query: `
-      query PostsQuery {
-        posts {
-          _id
-          title
-          body
-        }
-      }
-    `
-    }),
-    headers: {
-      'Content-Type': 'application/json'
-    }
-  })
-    .then(r => r.json())
-    .then(r => {
+  axios
+    .post('http://localhost:4000/', { query: getPostsQuery })
+    .then(res => {
       dispatch({
         type: GET_ITEMS,
-        payload: r.data.posts
+        payload: res.data.data.posts
       })
     })
     .catch(err => {
@@ -35,35 +21,17 @@ export const getPost = () => {
     type: GET_ITEM
   }
 }
-export const createPost = post => dispatch => {
+export const createPost = ({ title, body }) => dispatch => {
   dispatch(setItemsLoading())
-  fetch('http://localhost:4000/', {
-    method: 'POST',
-    body: JSON.stringify({
-      query: `
-      mutation CreatePost($title: String!, $body: String!) {
-        createPost(title: $title, body: $body) {
-          _id
-          title
-          body
-        }
-      }
-    `,
-      variables: {
-        title: post.body,
-        body: post.title
-      }
-    }),
-    headers: {
-      'Content-Type': 'application/json'
-    }
-  })
-    .then(r => r.json())
-    .then(r => {
-      console.log(r.data.createPost)
+  axios
+    .post('http://localhost:4000/', {
+      query: createPostQuery,
+      variables: { title, body }
+    })
+    .then(res => {
       dispatch({
         type: CREATE_ITEM,
-        payload: r.data.createPost
+        payload: res.data.data.createPost
       })
     })
     .catch(err => {
@@ -76,3 +44,66 @@ export const setItemsLoading = () => {
     type: ITEMS_LOADING
   }
 }
+
+// Using Fetch
+
+// fetch('http://localhost:4000/', {
+//   method: 'POST',
+//   body: JSON.stringify({
+//     query: `
+//     query PostsQuery {
+//       posts {
+//         _id
+//         title
+//         body
+//       }
+//     }
+//   `
+//   }),
+//   headers: {
+//     'Content-Type': 'application/json'
+//   }
+// })
+//   .then(r => r.json())
+//   .then(r => {
+//     dispatch({
+//       type: GET_ITEMS,
+//       payload: r.data.posts
+//     })
+//   })
+//   .catch(err => {
+//     console.log(err)
+//   })
+
+// fetch('http://localhost:4000/', {
+//   method: 'POST',
+//   body: JSON.stringify({
+//   query: `
+//   mutation CreatePost($title: String!, $body: String!) {
+//     createPost(title: $title, body: $body) {
+//       _id
+//       title
+//       body
+//     }
+//   }
+// `,
+//     variables: {
+//       title: post.body,
+//       body: post.title
+//     }
+//   }),
+//   headers: {
+//     'Content-Type': 'application/json'
+//   }
+// })
+//   .then(r => r.json())
+//   .then(r => {
+//     console.log(r.data.createPost)
+//     dispatch({
+//       type: CREATE_ITEM,
+//       payload: r.data.createPost
+//     })
+//   })
+//   .catch(err => {
+//     console.log(err)
+//   })
