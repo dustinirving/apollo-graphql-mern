@@ -1,7 +1,9 @@
-import React, { useState } from 'react'
-import { gql, useMutation } from '@apollo/client'
-import { connect } from 'react-redux'
-import { createPost } from '../actions/postActions'
+import React, { useState, useEffect } from "react";
+import { connect } from "react-redux";
+import { createPost } from "../store/actions/postActions";
+import { getUser } from "../store/actions/userActions";
+
+// import { gql, useMutation } from '@apollo/client'
 
 // const CREATE_POST = gql`
 //   mutation createPost($title: String!, $body: String!) {
@@ -12,35 +14,47 @@ import { createPost } from '../actions/postActions'
 //   }
 // `
 
-// { createPost }
-const Form = ({ createPost }) => {
-  const [form, setForm] = useState({ title: '', body: '' })
-  // const [createPost, { data }] = useMutation(CREATE_POST)
+// const [createPost, { data }] = useMutation(CREATE_POST)
+// createPost({ variables: { title: form.title, body: form.body } })
 
-  const changeHandler = event => {
-    const { name, value } = event.target
-    setForm({ ...form, [name]: value })
-  }
+const Form = ({ users, createPost, getUser }) => {
+  const [form, setForm] = useState({ title: "", body: "" });
 
-  const submitHandler = event => {
-    event.preventDefault()
-    createPost(form)
-    // createPost({ variables: { title: form.title, body: form.body } })
-  }
+  const changeHandler = (event) => {
+    const { name, value } = event.target;
+    setForm({ ...form, [name]: value });
+  };
+
+  const submitHandler = (event) => {
+    event.preventDefault();
+    createPost(form);
+    setForm({ title: "", body: "" });
+  };
 
   return (
     <form onSubmit={submitHandler}>
-      <input onChange={changeHandler} name='title' placeholder='title' />
-      <input onChange={changeHandler} name='body' placeholder='body' />
-      <button type='submit'>Submit</button>
+      <input
+        onChange={changeHandler}
+        name="title"
+        value={form.title}
+        placeholder="title"
+      />
+      <input
+        onChange={changeHandler}
+        name="body"
+        value={form.body}
+        placeholder="body"
+      />
+      <button type="submit">Submit</button>
     </form>
-  )
-}
+  );
+};
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
-    posts: state.posts
-  }
-}
+    posts: state.posts,
+    users: state.users,
+  };
+};
 
-export default connect(mapStateToProps, { createPost })(Form)
+export default connect(mapStateToProps, { createPost, getUser })(Form);

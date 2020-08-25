@@ -1,4 +1,5 @@
 // // Bundle up all of the models and export them
 module.exports = {
-  Post: require('./post')
+  Post: require('./post'),
+  User: require('./user')
 }

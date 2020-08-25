@@ -1,49 +1,51 @@
-import { GET_ITEMS, GET_ITEM, CREATE_ITEM, ITEMS_LOADING } from './types'
-import { getPostsQuery, createPostQuery } from '../queries'
-import axios from 'axios'
+import { GET_ITEMS, GET_ITEM, CREATE_ITEM, ITEMS_LOADING } from "./types";
+import { getPostsQuery, createPostQuery } from "./queries";
+import axios from "axios";
 
-export const getPosts = () => dispatch => {
-  dispatch(setItemsLoading())
+export const getPosts = () => (dispatch) => {
+  dispatch(setItemsLoading());
   axios
-    .post('http://localhost:4000/', { query: getPostsQuery })
-    .then(res => {
+    .post("/graphql", { query: getPostsQuery })
+    .then((res) => {
       dispatch({
         type: GET_ITEMS,
-        payload: res.data.data.posts
-      })
+        payload: res.data.data.posts,
+      });
     })
-    .catch(err => {
-      console.log(err)
-    })
-}
+    .catch((err) => {
+      console.log(err);
+    });
+};
 export const getPost = () => {
   return {
-    type: GET_ITEM
-  }
-}
-export const createPost = ({ title, body }) => dispatch => {
-  dispatch(setItemsLoading())
+    type: GET_ITEM,
+  };
+};
+export const createPost = ({ title, body }) => (dispatch) => {
+  dispatch(setItemsLoading());
   axios
-    .post('http://localhost:4000/', {
-      query: createPostQuery,
-      variables: { title, body }
-    })
-    .then(res => {
+    .post(
+      "/graphql",
+      {
+        query: createPostQuery,
+        variables: { title, body },
+      })
+    .then((res) => {
       dispatch({
         type: CREATE_ITEM,
-        payload: res.data.data.createPost
-      })
+        payload: res.data.data.createPost,
+      });
     })
-    .catch(err => {
-      console.log(err)
-    })
-}
+    .catch((err) => {
+      console.log(err);
+    });
+};
 
 export const setItemsLoading = () => {
   return {
-    type: ITEMS_LOADING
-  }
-}
+    type: ITEMS_LOADING,
+  };
+};
 
 // Using Fetch
 
